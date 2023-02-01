@@ -65,6 +65,11 @@ export class App {
 			}
 		}
 	}
+	private isInMap(v: Vector2): boolean {
+		if (v.x < 0 || v.x >= this.MapDimension.x) return false;
+		if (v.y < 0 || v.y >= this.MapDimension.y) return false;
+		return true;
+	}
 
 
 	static calcScore(distCovered: number[][], current: Vector2, end: Vector2) {
@@ -81,8 +86,7 @@ export class App {
 				let neighbour = current.add(new Vector2(i, j));
 
 				// Skip if neighbour is out of bound
-				if (neighbour.x < 0 || neighbour.x >= this.MapDimension.x) continue;
-				if (neighbour.y < 0 || neighbour.y >= this.MapDimension.y) continue;
+				if (!this.isInMap(neighbour)) continue;
 
 				// Skip if neighbour is wall
 				if (this.Map2D[neighbour.x][neighbour.y]) continue;
