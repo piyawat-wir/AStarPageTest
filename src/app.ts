@@ -7,7 +7,7 @@ export class App {
 
 	private MapDimension = new Vector2(50, 50);
 	private Map2D: number[][] = make2DArray(this.MapDimension.x, this.MapDimension.y, 0);
-	private scale = Math.floor(window.innerHeight / this.MapDimension.y); // px per block
+	private scale = 1; // px per block
 
 	private Mouse = {
 		position: new Vector2(),
@@ -26,7 +26,7 @@ export class App {
 		this.renderer = new Renderer(this.context);
 		this.renderer.setScale(this.scale);
 		this.resize();
-		window.addEventListener('resize', this.resize);
+		window.addEventListener('resize', e => this.resize());
 
 		window.addEventListener('mousemove', e => {
 			this.Mouse.position.x = Math.floor(e.clientX / this.scale);
@@ -65,6 +65,11 @@ export class App {
 			}
 		}
 	}
+	private isInMap(v: Vector2): boolean {
+		if (v.x < 0 || v.x >= this.MapDimension.x) return false;
+		if (v.y < 0 || v.y >= this.MapDimension.y) return false;
+		return true;
+	}
 
 
 	static calcScore(distCovered: number[][], current: Vector2, end: Vector2) {
@@ -81,8 +86,7 @@ export class App {
 				let neighbour = current.add(new Vector2(i, j));
 
 				// Skip if neighbour is out of bound
-				if (neighbour.x < 0 || neighbour.x >= this.MapDimension.x) continue;
-				if (neighbour.y < 0 || neighbour.y >= this.MapDimension.y) continue;
+				if (!this.isInMap(neighbour)) continue;
 
 				// Skip if neighbour is wall
 				if (this.Map2D[neighbour.x][neighbour.y]) continue;
@@ -105,6 +109,8 @@ export class App {
 		cv.height = window.innerHeight;
 		cv.style.width = cv.width.toString();
 		cv.style.height = cv.height.toString();
+		this.scale = Math.floor(window.innerHeight / this.MapDimension.y);
+		this.renderer.setScale(this.scale);
 	}
 
 	private checkMouseState(button: number, state: boolean) {
@@ -210,8 +216,9 @@ export class App {
 				this.context.fillStyle = 'white';
 				this.context.fillRect(0, 0, this.MapDimension.x * this.scale, this.MapDimension.y * this.scale);
 
-				if (this.Mouse.LButton) this.Map2D[this.Mouse.position.x][this.Mouse.position.y] = 1;
-				else if (this.Mouse.RButton) this.Map2D[this.Mouse.position.x][this.Mouse.position.y] = 0;
+				let isInMap = this.isInMap(this.Mouse.position);
+				if (this.Mouse.LButton && isInMap) this.Map2D[this.Mouse.position.x][this.Mouse.position.y] = 1;
+				else if (this.Mouse.RButton && isInMap) this.Map2D[this.Mouse.position.x][this.Mouse.position.y] = 0;
 				else if (this.Mouse.MButton) this.start();
 
 				this.renderer.draw(this.Map2D, this.MapDimension);
