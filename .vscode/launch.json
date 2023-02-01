@@ -7,7 +7,7 @@
 		{
 			"name": "Build & Serve",
 			"type": "node-terminal",
-			"command": "npm run build && npm run serve",
+			"command": "npx webpack serve",
 			"request": "launch",
 		},
 		{
