@@ -214,8 +214,9 @@ export class App {
 				this.context.fillStyle = 'white';
 				this.context.fillRect(0, 0, this.MapDimension.x * this.scale, this.MapDimension.y * this.scale);
 
-				if (this.Mouse.LButton) this.Map2D[this.Mouse.position.x][this.Mouse.position.y] = 1;
-				else if (this.Mouse.RButton) this.Map2D[this.Mouse.position.x][this.Mouse.position.y] = 0;
+				let isInMap = this.isInMap(this.Mouse.position);
+				if (this.Mouse.LButton && isInMap) this.Map2D[this.Mouse.position.x][this.Mouse.position.y] = 1;
+				else if (this.Mouse.RButton && isInMap) this.Map2D[this.Mouse.position.x][this.Mouse.position.y] = 0;
 				else if (this.Mouse.MButton) this.start();
 
 				this.renderer.draw(this.Map2D, this.MapDimension);
