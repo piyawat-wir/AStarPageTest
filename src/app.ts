@@ -7,7 +7,7 @@ export class App {
 
 	private MapDimension = new Vector2(50, 50);
 	private Map2D: number[][] = make2DArray(this.MapDimension.x, this.MapDimension.y, 0);
-	private scale = Math.floor(window.innerHeight / this.MapDimension.y); // px per block
+	private scale = 1; // px per block
 
 	private Mouse = {
 		position: new Vector2(),
@@ -109,6 +109,8 @@ export class App {
 		cv.height = window.innerHeight;
 		cv.style.width = cv.width.toString();
 		cv.style.height = cv.height.toString();
+		this.scale = Math.floor(window.innerHeight / this.MapDimension.y);
+		this.renderer.setScale(this.scale);
 	}
 
 	private checkMouseState(button: number, state: boolean) {
