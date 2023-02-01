@@ -26,7 +26,7 @@ export class App {
 		this.renderer = new Renderer(this.context);
 		this.renderer.setScale(this.scale);
 		this.resize();
-		window.addEventListener('resize', this.resize);
+		window.addEventListener('resize', e => this.resize());
 
 		window.addEventListener('mousemove', e => {
 			this.Mouse.position.x = Math.floor(e.clientX / this.scale);
